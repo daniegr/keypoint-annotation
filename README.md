@@ -145,7 +145,7 @@ The final coordinates is recorded from the center of the body part markers. Henc
 
 ### GUI
 
-<img src="images/GUI.PNG" width="350" />
+<img src="frontend/GUI.PNG" width="350" />
 
 * **GUIDELINE**: displays the order of how the body parts should be clicked and which colors that belong to which body parts
 
