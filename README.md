@@ -1,4 +1,4 @@
-# Keypoint annotation Program
+# Keypoint Annotation Program
 
 *Tool for annotating keypoints in images*
 
