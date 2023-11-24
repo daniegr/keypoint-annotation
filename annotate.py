@@ -229,7 +229,6 @@ class Annotate(tk.Frame):
                 0, 0, 0, 0, fill="", outline="")
             self.markers.append(marker)
             self.current_coordinates.append((0, 0))
-            self.top_canvas.lift(marker)
 
             # Bind to events
             self.top_canvas.tag_bind(
@@ -259,7 +258,6 @@ class Annotate(tk.Frame):
             marker = self.markers[i]
             self.top_canvas.itemconfig(marker, fill='', outline='', width=1)
             self.top_canvas.coords(marker, 0, 0, 0, 0)
-            self.top_canvas.lift(marker)
 
     def reset_lines(self):
         ''' Reset body part association lines due to change of image '''
@@ -306,7 +304,6 @@ class Annotate(tk.Frame):
             # Set location of marker
             self.top_canvas.coords(
                 marker, x_pos - self.marker_radius, y_pos - self.marker_radius, x_pos + self.marker_radius, y_pos + self.marker_radius)
-            self.top_canvas.lift(marker)
             
             # Set location of association line
             self.top_canvas.coords(
@@ -760,6 +757,14 @@ class Annotate(tk.Frame):
         self.main_frame.config(width=width)
         self.top_canvas.config(width=width, height=height)
         self.bottom_canvas.config(width=width - 4)
+        
+        # Reinitiate markers
+        if self.thumbnail_index < len(self.annotations):
+            self.current_coordinates = self.annotations[self.thumbnail_index]
+            self.draw_markers()
+        else:
+            self.reset_lines()
+            self.reset_markers()
 
         # Change image text
         if self.image_text:
@@ -781,17 +786,14 @@ class Annotate(tk.Frame):
             self.image_text = self.top_canvas.create_text(self.image.width * 0.5, self.image.height * 0.96,
                                                           text=text, fill="#ffffff",
                                                           font=font.Font(family='Helvetica', size=15, weight='bold'), justify=tk.CENTER)
-
+        
         # Update guideline image
         self.add_guideline_image(self.body_part_index)
         
-        # Reinitiate markers
-        if self.thumbnail_index < len(self.annotations):
-            self.current_coordinates = self.annotations[self.thumbnail_index]
-            self.draw_markers()
-        else:
-            self.reset_lines()
-            self.reset_markers()
+        # Force markers in front
+        for i in range(NUM_BODY_PARTS):
+            marker = self.markers[i]
+            self.top_canvas.lift(marker)
 
     def is_new_image(self):
         ''' Returns True if the image does not already exist '''
